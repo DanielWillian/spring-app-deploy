@@ -3,10 +3,10 @@ plugins {
 	id 'org.springframework.boot' version '3.5.6'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.diffplug.spotless' version '6.25.0'
+	id 'nebula.release' version '21.0.0'
 }
 
 group = 'io.boot2prod'
-version = '0.0.1-SNAPSHOT'
 description = 'Demo project to deploy to environments'
 
 java {
@@ -32,6 +32,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.register("printVersion") {
+  doLast { println(project.version) }
 }
 
 spotless {
