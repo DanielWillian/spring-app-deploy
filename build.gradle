@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'maven-publish'
 	id 'org.springframework.boot' version '3.5.6'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.diffplug.spotless' version '6.25.0'
@@ -17,6 +18,10 @@ java {
 
 repositories {
 	mavenCentral()
+}
+
+bootJar {
+  archiveClassifier = 'spring'
 }
 
 dependencies {
@@ -43,5 +48,23 @@ spotless {
 		palantirJavaFormat()
 		importOrder()
 		removeUnusedImports()
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact tasks.named('bootJar')
+		}
+	}
+	repositories {
+		maven {
+			name = 'GitHubPackages'
+			url = uri("https://maven.pkg.github.com/DanielWillian/spring-app-deploy")
+			credentials {
+				username = System.getenv('GITHUB_ACTOR')
+				password = System.getenv('GITHUB_TOKEN')
+			}
+		}
 	}
 }
