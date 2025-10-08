@@ -7,7 +7,7 @@ ARTIFACT=spring-app-deploy
 BASE="https://maven.pkg.github.com/${OWNER}/${REPO}"
 
 should_publish() {
-  if VERSION="$(./gradlew -Prelease.useLastTag=true -q printVersion)"; then
+  if VERSION="$(./gradlew -Prelease.useLastTag=true -q printVersion 2>/dev/null)"; then
     JAR_PATH="${GROUP}/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}-spring.jar"
     CODE="$(curl -s -I -L -o /dev/null -w "%{http_code}\n" \
         -u "${GITHUB_ACTOR}:${GITHUB_TOKEN}" \
@@ -25,6 +25,7 @@ should_publish() {
 }
 
 if should_publish; then
-  ./gradlew final
+  ./gradlew final --info
+  ./gradlew -Prelease.useLastTag=true -q printVersion
   ./gradlew -Prelease.useLastTag=true publish --info
 fi
