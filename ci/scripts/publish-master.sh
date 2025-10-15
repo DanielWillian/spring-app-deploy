@@ -10,8 +10,8 @@ should_publish() {
   if VERSION="$(./gradlew -Prelease.useLastTag=true -q printVersion 2>/dev/null)"; then
     JAR_PATH="${GROUP}/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}-spring.jar"
     CODE="$(curl -s -I -L -o /dev/null -w "%{http_code}\n" \
-        -u "${GITHUB_ACTOR}:${GITHUB_TOKEN}" \
-        "${BASE}/${JAR_PATH}")"
+      -u "${GITHUB_ACTOR}:${GITHUB_TOKEN}" \
+      "${BASE}/${JAR_PATH}")"
     if [ "$CODE" = "200" ]; then
       echo "Artifact already exists (${BASE}/${JAR_PATH}) -> $CODE! Skipping publish"
       return 1

@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: gradle-spotless-apply
+        name: gradle spotlessApply
+        language: system
+        pass_filenames: false
+        entry: ./gradlew --quiet --no-daemon spotlessApply
+        types: [java]
+      - id: shfmt
+        name: format shell scripts
+        language: docker_image
+        args: ["-w", "-d", "-i", "2", "-ci"]
+        entry: "mvdan/shfmt:v3.12.0-alpine"
+        types: [shell]
+      - id: shellcheck
+        name: analyze shell scripts
+        language: docker_image
+        entry: "koalaman/shellcheck:v0.11.0"
+        types: [shell]

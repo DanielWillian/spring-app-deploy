@@ -12,8 +12,8 @@ should_release() {
     JAR_PATH="${GROUP}/${ARTIFACT}/${VERSION}/${JAR_NAME}"
     LOCAL_JAR_PATH="build/${JAR_NAME}"
     CODE="$(curl -s -I -L -o "${LOCAL_JAR_PATH}" -w "%{http_code}\n" \
-        -u "${GITHUB_ACTOR}:${GITHUB_TOKEN}" \
-        "${BASE}/${JAR_PATH}")"
+      -u "${GITHUB_ACTOR}:${GITHUB_TOKEN}" \
+      "${BASE}/${JAR_PATH}")"
     if [ "${CODE}" != "200" ]; then
       echo "Artifact not found or not 200 (${BASE}/${JAR_PATH}) -> ${CODE}! Can't release!"
       return 1
@@ -35,6 +35,6 @@ should_release() {
 
 if should_release; then
   gh release create "${TAG}" "${LOCAL_JAR_PATH}" \
-        --title "${TAG}" \
-        --generate-notes
+    --title "${TAG}" \
+    --generate-notes
 fi
