@@ -24,3 +24,9 @@ repos:
         language: docker_image
         entry: "koalaman/shellcheck:v0.11.0"
         types: [shell]
+      - id: terraform-fmt-write
+        name: terraform fmt
+        language: docker_image
+        entry: hashicorp/terraform:1.13.4
+        args: ["fmt"]
+        files: ^.*\.(tf|tfvars|tf\.tmpl)$
