@@ -1,4 +1,4 @@
-ALL_SOURCES:=$(shell git ls-tree --full-tree -r --name-only HEAD)
+ALL_SOURCES:=$(shell git ls-files --cached --others --exclude-standard)
 MAKE_DIR:=.make
 
 $(MAKE_DIR):
