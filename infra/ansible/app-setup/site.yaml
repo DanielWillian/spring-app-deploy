@@ -1,0 +1,62 @@
+- name: Setup Java 21 and app service
+  hosts: all
+  become: true
+
+  vars:
+    app_name: spring-app-deploy
+    app_user: spring-app-deploy
+    app_group: spring-app-deploy
+    app_base_dir: /opt/spring-app-deploy
+    app_current_jar: /opt/spring-app-deploy/current.jar
+    app_log_dir: /var/log/spring-app-deploy
+    app_service_name: spring-app-deploy
+    java_package_name: java-21-amazon-corretto
+    java_bin: java
+    app_jar_name: app.jar
+
+  tasks:
+    - name: Install Java 21
+      ansible.builtin.package:
+        name: "{{ java_package_name }}"
+        state: present
+
+    - name: Ensure app group exists
+      ansible.builtin.group:
+        name: "{{ app_group }}"
+        state: present
+
+    - name: Ensure app user exists
+      ansible.builtin.user:
+        name: "{{ app_user }}"
+        group: "{{ app_group }}"
+        shell: /usr/sbin/nologin
+        create_home: false
+        system: true
+
+    - name: Create application base dir
+      ansible.builtin.file:
+        path: "{{ app_base_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
+
+    - name: Create log directory
+      ansible.builtin.file:
+        path: "{{ app_log_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0755"
+
+    - name: Install systemd service unit
+      ansible.builtin.template:
+        src: "{{ app_service_name }}.service.j2"
+        dest: /etc/systemd/system/{{ app_service_name }}.service
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: true

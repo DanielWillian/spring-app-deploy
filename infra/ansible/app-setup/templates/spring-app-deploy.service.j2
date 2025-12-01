@@ -1,0 +1,17 @@
+[Unit]
+Description={{ app_name }} Java Service
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ app_base_dir }}
+ExecStart={{ java_bin }} -jar {{ app_current_jar }}
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:{{ app_log_dir }}/{{ app_name }}.log
+StandardError=append:{{ app_log_dir }}/{{ app_name }}.err.log
+
+[Install]
+WantedBy=multi-user.target

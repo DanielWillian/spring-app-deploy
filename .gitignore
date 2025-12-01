@@ -39,3 +39,5 @@ out/
 .make/
 
 **/.terraform/
+
+**/.ansible/
