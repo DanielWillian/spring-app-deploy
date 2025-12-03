@@ -11,7 +11,7 @@ should_release() {
     JAR_NAME="${ARTIFACT}-${VERSION}-spring.jar"
     JAR_PATH="${GROUP}/${ARTIFACT}/${VERSION}/${JAR_NAME}"
     LOCAL_JAR_PATH="build/${JAR_NAME}"
-    CODE="$(curl -s -I -L -o "${LOCAL_JAR_PATH}" -w "%{http_code}\n" \
+    CODE="$(curl -s -L -o "${LOCAL_JAR_PATH}" -w "%{http_code}\n" \
       -u "${GITHUB_ACTOR}:${GITHUB_TOKEN}" \
       "${BASE}/${JAR_PATH}")"
     if [ "${CODE}" != "200" ]; then
