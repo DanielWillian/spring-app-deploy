@@ -1,0 +1,2 @@
+deploy_context = "dev"
+instance_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICLwuA0X9gyVO73UAGqmdyQHzg5btcRKuUxQqX+d3hci aws-71yhz8"

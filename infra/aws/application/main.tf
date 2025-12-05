@@ -10,6 +10,13 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+
+  default_tags {
+    tags = {
+      Application = "spring-app-deploy"
+      Context     = var.deploy_context
+    }
+  }
 }
 
 data "aws_vpc" "default" {
@@ -76,6 +83,11 @@ data "aws_ami" "al2023" {
   }
 }
 
+resource "aws_key_pair" "instance_key" {
+  key_name   = "instance-key-${var.deploy_context}"
+  public_key = var.instance_public_key
+}
+
 resource "aws_instance" "instance" {
   ami                         = data.aws_ami.al2023.id
   instance_type               = "t3.micro"
@@ -83,6 +95,7 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids      = [aws_security_group.instance.id]
   iam_instance_profile        = aws_iam_instance_profile.instance_profile.name
   associate_public_ip_address = true
+  key_name                    = aws_key_pair.instance_key.key_name
   user_data                   = <<EOF
 #!/bin/bash
 dnf install -y amazon-ssm-agent
