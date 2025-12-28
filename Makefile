@@ -10,7 +10,7 @@ $(MAKE_DIR)/requirements: $(MAKE_DIR) requirements/ci.txt
 	python -m pip install -r requirements/ci.txt
 	touch $@
 
-pre-commit: $(MAKE_DIR)/pre-commit requirements
+pre-commit: requirements $(MAKE_DIR)/pre-commit
 
 $(MAKE_DIR)/pre-commit: $(MAKE_DIR) $(ALL_SOURCES) .pre-commit-config.yaml
 	pre-commit run
