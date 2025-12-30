@@ -31,7 +31,7 @@ push_to_s3() {
   fi
 
   JAR_NAME="${ARTIFACT}-${VERSION}-spring.jar"
-  JAR_PATH="build/${JAR_NAME}"
+  JAR_PATH="build/libs/${JAR_NAME}"
   S3_KEY="${ARTIFACT}/${VERSION}/${JAR_NAME}"
   S3_PATH="s3://${ARTIFACT_BUCKET_NAME}/${S3_KEY}"
   if [ -f "${JAR_PATH}" ]; then
