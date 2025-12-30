@@ -24,8 +24,29 @@ should_publish() {
   fi
 }
 
+push_to_s3() {
+  if [ -z "${ARTIFACT_BUCKET_NAME}" ]; then
+    echo "Empty ARTIFACT_BUCKET_NAME env" >&2
+    exit 3
+  fi
+
+  JAR_NAME="${ARTIFACT}-${VERSION}-spring.jar"
+  JAR_PATH="build/${JAR_NAME}"
+  S3_KEY="${ARTIFACT}/${VERSION}/${JAR_NAME}"
+  S3_PATH="s3://${ARTIFACT_BUCKET_NAME}/${S3_KEY}"
+  if [ -f "${JAR_PATH}" ]; then
+    aws s3 cp "${JAR_PATH}" "${S3_PATH}" --only-show-errors
+    echo "Copied jar to ${S3_KEY}"
+  else
+    echo "${JAR_PATH} does not exist! Could not upload to s3" >&2
+    exit 5
+  fi
+}
+
 if should_publish; then
   ./gradlew final --info
-  ./gradlew -Prelease.useLastTag=true -q printVersion
+  VERSION="$(./gradlew -Prelease.useLastTag=true -q printVersion)"
+  export VERSION
   ./gradlew -Prelease.useLastTag=true publish --info
+  push_to_s3
 fi

@@ -58,6 +58,14 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: corretto, java-version: '21'}
       - uses: gradle/actions/setup-gradle@v4
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Mask sensitive values
+        run: |
+          echo "::add-mask::${{ secrets.ARTIFACT_BUCKET_NAME }}"
       - name: Publish
         run: |
           git config user.name  "${GITHUB_ACTOR} (via CI)"
@@ -66,6 +74,7 @@ jobs:
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACT_BUCKET_NAME: ${{ secrets.ARTIFACT_BUCKET_NAME }}
 
   release:
     needs: [publish]
